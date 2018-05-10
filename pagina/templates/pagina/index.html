@@ -1,12 +1,116 @@
-{% with total="asd" %}
+<!--{% with total="asd" %}
 	<section>
 		<label for="">Ingrese su ip:</label>
 		<input type="text" id="ip">
 		<button type="button" onclick="ver()">Aceptar</button>
 	</section>
 
-    <h1>{{ total }}</h1>
-{% endwith %}
+	<script>
 
-def ver():
-	total = "ffff"
+	var context_var= "{{total}}";
+	alert(context_var);
+
+</script>
+
+    <h1>{{ total }}</h1>
+{% endwith %}-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>generador VLSM</title>
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+		<div class="container">
+			<section class="row">
+				<h2>Subneteo por VLSM</h2>
+				<hr>
+			</section>
+
+			<section class="row hidden" id="tableResoult">
+				<div class="container">
+					<div class="col-xs-12 listHosts">
+						<section class="row"></section>
+						<table class="table table-hover table-striped">
+	                        <thead class="text-primary">
+	                        	<th>Nombre Subred</th>
+	                        	<th>Subred</th>
+	                        	<th>CIDR</th>
+	                        	<th>Hosts</th>
+	                        	<th>Hosts encontrados</th>
+	                        	<th>Rangos IP's</th>
+	                        	<th>Broadcast</th>
+	                        </thead>
+	                        <tbody id="cont_subnet"></tbody>
+	                    </table>
+					</div>
+				</div>
+			</section>
+
+			<section class="row">
+				
+				<div class="col-xs-6">
+					<br><strong>¿Tienes una dirección de red con la cual iniciar?</strong>
+					<p>Entonces escribela como red de interes para subnetear con VLSM de acuerdo a esa red. </p>
+					<br><strong>¿No tienes la menor idea de que dirección de red utilizar?</strong>
+					<p>No te preocupes, simplemente omite el campo de red de interes y da inicio al llenado de la tabla de tus hosts según la subred deseada, al terminar, se te mostrarán sugerencias de direcciones de red para subnetear por VLSM, selecciona la que más se adecue a tus necesidades y listo.</p>
+				</div>
+				<div class="col-xs-6">
+					<div class="col-xs-6 text-right">
+						<label class="label-control lb">RED DE INTERES:</label>
+					</div>
+					<div class="col-xs-6"><input type="text" class="form-control"></div>
+
+					<div class="col-xs-12 listHosts">
+						<section class="row"></section>
+						<table class="table table-hover" id="tbHosts">
+	                        <thead class="text-primary">
+	                        	<th>Nombre Subred</th>
+	                        	<th>Hosts</th>
+	                        </thead>
+	                        <tbody id="cont_HostTB"></tbody>
+	                    </table>
+	                    <table class="table">
+	                        <tbody>
+	                        	<tr>
+	                        		<td>
+	                        			<input type="text" class="form-control" placeholder="Nombre Subred*" id="inpName" value="SubR1" required>
+	                        			<div class="checkbox checbox-switch switch-success">
+		                                    <label>
+		                                        <input type="checkbox" id="autogenSname" checked="">
+		                                        <span></span>
+		                                        Generar nombre subred.
+		                                    </label>
+		                                </div>
+		                                <div class="checkbox checbox-switch switch-success">
+		                                    <label>
+		                                        <input type="checkbox" id="cleanHostinp">
+		                                        <span></span>
+		                                        Limpiar hosts.
+		                                    </label>
+		                                </div>
+	                        		</td>
+	                        		<td>
+	                        			<input type="number" class="form-control" placeholder="Cantidad de hosts*" id="inpCant" required>
+	                        		    <button class="pull-right btn btn-info ter" disabled>TERMINAR</button>
+	                        		    <button class="pull-right btn btn-success add">AGREGAR</button>
+	                        		    <img src="/static/img/reset.svg" class="pull-right reset">
+	                        		</td>
+	                        	</tr>
+	                        </tbody>
+	                    </table>
+	                    <strong class="text-danger alertHostTable"></strong>
+					</div>
+				</div>
+			</section>
+
+			
+		</div>
+
+		<script src="/static/js/jquery.min.js"></script>
+		<script src="/static/js/jquery.dataTables.min.js"></script>
+		<script src="/static/js/vlsm.js"></script>
+</body>
+</html>
