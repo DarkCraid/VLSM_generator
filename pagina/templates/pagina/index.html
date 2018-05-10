@@ -1,3 +1,12 @@
-{% load static %}
- <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<h1>hola</h1>
+{% with total="asd" %}
+	<section>
+		<label for="">Ingrese su ip:</label>
+		<input type="text" id="ip">
+		<button type="button" onclick="ver()">Aceptar</button>
+	</section>
+
+    <h1>{{ total }}</h1>
+{% endwith %}
+
+def ver():
+	total = "ffff"
