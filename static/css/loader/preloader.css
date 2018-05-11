@@ -1,5 +1,5 @@
 .preloader {
-  background: #ffffff;
+  background: #000;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -57,8 +57,8 @@
   .preloader-text, .preloader-percent {
     position: absolute;
     text-align: center;
-    color: #34495e;
-    z-index: 1; }
+    color: #e3e3e3;
+    z-index: 1; font-weight: bold;}
   .preloader-text {
     width: 50%;
     top: calc(50% - 6.5em);

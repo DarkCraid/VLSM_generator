@@ -157,29 +157,55 @@ function printSubnetTable(){
 			cont 	+=	'<td>'+contSubRed[i].rangos+'</td>';
 			cont 	+=	'<td>'+contSubRed[i].broadcast+'</td></tr>';
 		$('#cont_subnet').append(cont);
-	}
-	$('#tableResoult').removeClass('hidden');
+	}$('#tableResoult').removeClass('hidden');
 }
 
 function countHosts(){
 	var totalHosts = 0;
-
-	for (var i = 0; i < cont_HostTB.length; i++) {
-		contSubRed.push({
-			'name':cont_HostTB[i].name,
-			'subred':'1.1.1.1',
-			'cird':'/5',
-			'host':cont_HostTB[i].cant,
-			'encontrados':'4',
-			'rangos':'4.4.4.4 - 5.5.5.5',
-			'broadcast':'123.123.123.123'
-		});
+	for (var i = 0; i < cont_HostTB.length; i++)
 		totalHosts+= parseInt(cont_HostTB[i].cant);
-	}
-
 	return totalHosts;
 }
 
 function subnetear(redPrincipal){
-	alert(redPrincipal);
+	for (var i = 0; i < cont_HostTB.length; i++) {
+		var enc 	 = 0;
+		var contador = 2;
+		
+		while(enc < (parseInt(cont_HostTB[i].cant)+2)){
+			enc = Math.pow(2,contador);
+			contador++;
+		}
+		var cird = 32 - contador+1;
+		var res = redPrincipal.split(".",4);
+		var rangos = '';
+		var broad = '';
+		if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseC){
+			rangos = res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+1)+'\t-\t'+
+			res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+enc-2);
+			broad = res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+enc-1);
+			if(parseInt(res[3])+enc==256){
+				res = res[0]+'.'+res[1]+'.'+(parseInt(res[2])+1)+'.0';
+			}else
+				res = res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+enc);
+
+		}else if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseB){
+
+		}else if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseA){
+
+		}
+
+		contSubRed.push({
+			'name':cont_HostTB[i].name,
+			'subred':redPrincipal,
+			'cird':'/'+cird,
+			'host':cont_HostTB[i].cant,
+			'encontrados':enc,
+			'rangos':rangos,
+			'broadcast':broad
+		});
+		redPrincipal = res;
+
+	}
+	printSubnetTable();
 }
