@@ -20,6 +20,8 @@
 	<meta charset="UTF-8">
 	<title>generador VLSM</title>
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/bootstrap-dialog.min.css">
+	<link rel="stylesheet" href="/static/css/loader/preloader.css">
 	<link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -53,15 +55,15 @@
 				
 				<div class="col-xs-6">
 					<br><strong>¿Tienes una dirección de red con la cual iniciar?</strong>
-					<p>Entonces escribela como red de interes para subnetear con VLSM de acuerdo a esa red. </p>
+					<p>Entonces escribela como red de interés para subnetear con VLSM de acuerdo a esa red. </p>
 					<br><strong>¿No tienes la menor idea de que dirección de red utilizar?</strong>
-					<p>No te preocupes, simplemente omite el campo de red de interes y da inicio al llenado de la tabla de tus hosts según la subred deseada, al terminar, se te mostrarán sugerencias de direcciones de red para subnetear por VLSM, selecciona la que más se adecue a tus necesidades y listo.</p>
+					<p>No te preocupes, simplemente omite el campo de red de interés y da inicio al llenado de la tabla de tus hosts según la subred deseada. Al terminar, se te mostrarán sugerencias de direcciones de red para subnetear por VLSM, selecciona la que más se adecúe a tus necesidades y listo.</p>
 				</div>
 				<div class="col-xs-6">
 					<div class="col-xs-6 text-right">
-						<label class="label-control lb">RED DE INTERES:</label>
+						<label class="label-control lb">RED DE INTERÉS:</label>
 					</div>
-					<div class="col-xs-6"><input type="text" class="form-control"></div>
+					<div class="col-xs-6"><input type="text" class="form-control" id="redint"></div>
 
 					<div class="col-xs-12 listHosts">
 						<section class="row"></section>
@@ -111,6 +113,11 @@
 
 		<script src="/static/js/jquery.min.js"></script>
 		<script src="/static/js/jquery.dataTables.min.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<script src="/static/js/bootstrap-dialog.min.js"></script>
+		<script src="/static/js/generales.js"></script>
 		<script src="/static/js/vlsm.js"></script>
+		<script src="/static/js/loader/jquery.preloader.min.js"></script>
+		<script src="/static/js/loader/loader.js"></script>
 </body>
 </html>
