@@ -1,5 +1,8 @@
 var cantHost 	= 0;
 var cont_HostTB	= [];
+let maxHosts 	= [{'claseC':254,'claseB':65534,'claseA':2147483648}];
+let rangosRedes = [{'claseA':{'min':1,'max':126},'claseB':{'min':128,'max':191},'claseC':{'min':192,'max':223}}];
+var contSubRed 	= [];
 
 $('#autogenSname').change(function(){
 	autoName();
@@ -8,11 +11,15 @@ $('#cleanHostinp').change(function(){
 	cleanHosts();
 });
 $('.ter').click(function(){
-	subnetear();
-	$('#tableResoult').removeClass('hidden');
+	$('.add').attr('disabled',true);
+	$('.ter').attr('disabled',true);
+	preSub();
 });
 $('.reset').click(function(){
-	window.location.reload();
+	startLoader();
+	setTimeout(function(){
+		window.location.reload();
+	},500);
 })
 
 $('.add').click(function(){
@@ -44,10 +51,6 @@ function actualizarTabla(){
 			'</td><td width="50%"><input type="number" class="form-control" placeholder="Cantidad de hosts*" value="'+cont_HostTB[i].cant+'" /><img src="/static/img/x.png" onclick="deleteTBH('+i+')"></td></tr>');
 	}
 }
-function dropDataTable(tableId){ 
-  $('#'+tableId).dataTable().fnDestroy();
-  $('#'+tableId).children('tbody').children('tr').remove();
-}
 
 function autoName(){
 	if($('#autogenSname').is(':checked'))
@@ -65,8 +68,101 @@ function deleteTBH(index){
 	cont_HostTB.splice(index,1);
 	actualizarTabla();
 }
-function subnetear(){
-	var contSubRed = [];
+function preSub(){
+	if($('#redint').val()=='')
+		alertSugerenciasRed(countHosts());
+	else
+		subnetear($('#redint').val());
+}
+
+
+function alertSugerenciasRed(totalHosts){
+	var contHTML	= "";
+	var contAlert 	= ["Sugerencias de redes para subnetear"];
+	
+	contHTML += "<p>Seleccione una red de interés, posterirmente de click a continuar para subnetear con VLSM.</p>";
+	contHTML += '<br>';
+	contOp	 = '';
+	if(totalHosts<=maxHosts[0].claseC){
+		for (var i = rangosRedes[0].claseC.min; i <= rangosRedes[0].claseC.max; i++)
+			contOp += '<option value="'+i+'">'+i+'</option>';
+
+		contHTML += '<select class="form-control octeto" id="oct1">'+contOp+'</select>';
+		contOp = '';
+
+		for(var x=2;x<4;x++){
+			for (var i = 0; i <= 255; i++){
+				if(i==168 && x==2)
+					contOp += '<option value="'+i+'" selected>'+i+'</option>';
+				else
+					contOp += '<option value="'+i+'">'+i+'</option>';
+			}
+			contHTML += '<select class="form-control octeto" id="oct'+x+'">'+contOp+'</select>'; contOp='';
+		}
+		contHTML += '<select class="form-control octeto" id="oct4"><option value="0">0</option></select>';
+	}
+	else if(totalHosts<=maxHosts[0].claseB){
+		for (var i = rangosRedes[0].claseB.min; i <= rangosRedes[0].claseB.max; i++){
+				if(i==172)
+					contOp += '<option value="'+i+'" selected>'+i+'</option>';
+				else
+					contOp += '<option value="'+i+'">'+i+'</option>';
+			}
+
+		contHTML += '<select class="form-control octeto" id="oct1">'+contOp+'</select>';
+		contOp = '';
+
+		for (var i = 0; i <= 255; i++){
+				if(i==16)
+					contOp += '<option value="'+i+'" selected>'+i+'</option>';
+				else
+					contOp += '<option value="'+i+'">'+i+'</option>';
+			}
+		contHTML += '<select class="form-control octeto" id="oct2">'+contOp+'</select>';
+		contHTML += '<select class="form-control octeto" id="oct3"><option value="0">0</option></select>';
+		contHTML += '<select class="form-control octeto" id="oct4"><option value="0">0</option></select>';
+	}
+	else if(totalHosts<=maxHosts[0].claseA) {
+		for (var i = rangosRedes[0].claseA.min; i <= rangosRedes[0].claseA.max; i++)
+			contOp += '<option value="'+i+'">'+i+'</option>';
+
+		contHTML += '<select class="form-control octeto" id="oct1">'+contOp+'</select>';
+		contOp = '';
+
+		for (var i = 2; i <=4 ; i++)
+			contHTML += '<select class="form-control octeto" id="oct'+i+'"><option value="0">0</option></select>';
+	}
+
+	cleanBotonesModal(false);
+	botonesModal=[{ 
+	    label: 'Continuar',
+	        cssClass: 'btn-primary',
+	        action: function(dialogItself){ 
+	        	subnetear($('#oct1').val()+'.'+$('#oct2').val()+'.'+$('#oct3').val()+'.'+$('#oct4').val());
+	        	dialogItself.close(); 
+	        }
+	    }];
+	contAlert.push(contHTML);
+	modal('info','wide',contAlert[0],contAlert[1],false,false);
+}
+
+
+function printSubnetTable(){
+	for (var i = 0; i < contSubRed.length; i++) {	
+		var cont 	=	'<tr><td>'+contSubRed[i].name+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].subred+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].cird+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].host+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].encontrados+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].rangos+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].broadcast+'</td></tr>';
+		$('#cont_subnet').append(cont);
+	}
+	$('#tableResoult').removeClass('hidden');
+}
+
+function countHosts(){
+	var totalHosts = 0;
 
 	for (var i = 0; i < cont_HostTB.length; i++) {
 		contSubRed.push({
@@ -78,16 +174,12 @@ function subnetear(){
 			'rangos':'4.4.4.4 - 5.5.5.5',
 			'broadcast':'123.123.123.123'
 		});
+		totalHosts+= parseInt(cont_HostTB[i].cant);
 	}
-	for (var i = 0; i < contSubRed.length; i++) {
-		
-		var cont 	=	'<tr><td>'+contSubRed[i].name+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].subred+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].cird+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].host+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].encontrados+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].rangos+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].broadcast+'</td></tr>';
-		$('#cont_subnet').append(cont);
-	}
+
+	return totalHosts;
+}
+
+function subnetear(redPrincipal){
+	alert(redPrincipal);
 }
