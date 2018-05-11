@@ -1,7 +1,7 @@
 var     obj = {}, someBlock = $('body');
 
     function getValues() {
-        obj.textVal = $('#textInput').val();
+        obj.textVal = "Espere.";
         obj.percentVal = $('#percentInput').val();
         obj.durationVal = $('#durationInput').val();
     }
