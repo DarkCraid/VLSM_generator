@@ -13,6 +13,7 @@ $('#cleanHostinp').change(function(){
 $('.ter').click(function(){
 	$('.add').attr('disabled',true);
 	$('.ter').attr('disabled',true);
+	ordenar();
 	preSub();
 });
 $('.reset').click(function(){
@@ -23,6 +24,10 @@ $('.reset').click(function(){
 })
 
 $('.add').click(function(){
+	add();
+});
+
+function add(){
 	if($('#inpCant').val()!='' && $('#inpName').val()!=''){
 		cont_HostTB.push({'name': $('#inpName').val(),'cant':$('#inpCant').val()});
 		actualizarTabla();
@@ -34,6 +39,11 @@ $('.add').click(function(){
 		$('.alertHostTable').append('<a href="#" id="a_ok" onclick="a_ok()"> OK</a>');
 		$('#a_ok').removeClass('hidden');
 	}
+}
+
+$('#inpCant').keyup(function(e){
+    if(e.keyCode == 13)
+	    add();
 });
 
 function a_ok(){
@@ -208,4 +218,27 @@ function subnetear(redPrincipal){
 
 	}
 	printSubnetTable();
+}
+
+function ordenar(){
+    var i,j,aux;
+    for (i=0;i<cont_HostTB.length;i++){
+        for(j=i+1;j<cont_HostTB.length;j++)
+        {
+            if(parseInt(cont_HostTB[i].cant)<parseInt(cont_HostTB[j].cant))
+            {
+                aux=cont_HostTB[i].cant;
+                cont_HostTB[i].cant=cont_HostTB[j].cant;
+                cont_HostTB[j].cant=aux;
+
+                aux=cont_HostTB[i].name;
+                cont_HostTB[i].name=cont_HostTB[j].name;
+                cont_HostTB[j].name=aux;
+            }
+        }
+    }
+    for(i=0;i<cont_HostTB.length;i++)
+    {
+        console.log(cont_HostTB[i].cant+'\n');
+    }
 }
