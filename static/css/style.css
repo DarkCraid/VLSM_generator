@@ -56,7 +56,12 @@ input[type="number"]::-webkit-inner-spin-button {
 .reset{
 	width: 30px;height: 30px;    margin-top: 7px;
 }
-.reset:hover{cursor: pointer;}
+.reset-in-table{    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: -6px !important;
+    top: -6px !important;}
+.reset, .reset-in-table:hover{cursor: pointer;}
 select.octeto{width: 80px; float: left;}
 
 

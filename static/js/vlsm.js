@@ -160,11 +160,12 @@ function alertSugerenciasRed(totalHosts){
 function printSubnetTable(){
 	for (var i = 0; i < contSubRed.length; i++) {	
 		var cont 	=	'<tr><td>'+contSubRed[i].name+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].subred+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].cird+'</td>';
 			cont 	+=	'<td>'+contSubRed[i].host+'</td>';
 			cont 	+=	'<td>'+contSubRed[i].encontrados+'</td>';
-			cont 	+=	'<td>'+contSubRed[i].rangos+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].subred+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].cird+'</td>';
+			cont 	+=	'<td>'+contSubRed[i].mask+'</td>';
+			cont 	+=	'<td class="text-center">'+contSubRed[i].rangos+'</td>';
 			cont 	+=	'<td>'+contSubRed[i].broadcast+'</td></tr>';
 		$('#cont_subnet').append(cont);
 	}$('#tableResoult').removeClass('hidden');
@@ -190,6 +191,7 @@ function subnetear(redPrincipal){
 		var res = redPrincipal.split(".",4);
 		var rangos = '';
 		var broad = '';
+		var mask = '';
 		if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseC){
 			rangos = res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+1)+'\t-\t'+
 			res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+enc-2);
@@ -198,22 +200,45 @@ function subnetear(redPrincipal){
 				res = res[0]+'.'+res[1]+'.'+(parseInt(res[2])+1)+'.0';
 			}else
 				res = res[0]+'.'+res[1]+'.'+res[2]+'.'+(parseInt(res[3])+enc);
+			mask = '255.255.255.'+(256-parseInt(enc));
 
 		}else if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseB){
+			enc = Math.pow(2,contador-9);
+			rangos = res[0]+'.'+res[1]+'.'+res[2]+'.1\t-\t'+
+			res[0]+'.'+res[1]+'.'+(parseInt(res[2])+enc-1)+'.254';
+			broad = res[0]+'.'+res[1]+'.'+(parseInt(res[2])+enc-1)+'.255';
+			if(parseInt(res[2])+enc==256){
+				res = res[0]+'.'+(parseInt(res[1])+1)+'.0.0';
+			}else
+				res = res[0]+'.'+res[1]+'.'+(parseInt(res[2])+enc)+'.0';
+			mask = '255.255.'+(256-parseInt(enc))+'.0';
+			enc = Math.pow(2,contador-1);
 
 		}else if(parseInt(cont_HostTB[i].cant)<maxHosts[0].claseA){
-
+			enc = Math.pow(2,contador-17);
+			rangos = res[0]+'.'+res[1]+'.0.1\t-\t'+
+			res[0]+'.'+(parseInt(res[1])+enc-1)+'.255.254';
+			broad = res[0]+'.'+(parseInt(res[1])+enc-1)+'.255.255';
+			if(parseInt(res[2])+enc==256){
+				res = (parseInt(res[0])+1)+'.0.0.0';
+			}else
+				res = res[0]+'.'+(parseInt(res[1])+enc)+'.0.0';
+			mask = '255.'+(256-parseInt(enc))+'.0.0';
+			enc = Math.pow(2,contador-1);
+			
 		}
 
 		contSubRed.push({
 			'name':cont_HostTB[i].name,
 			'subred':redPrincipal,
 			'cird':'/'+cird,
+			'mask':mask,
 			'host':cont_HostTB[i].cant,
 			'encontrados':enc,
 			'rangos':rangos,
 			'broadcast':broad
 		});
+		console.log(redPrincipal);
 		redPrincipal = res;
 
 	}
@@ -236,9 +261,5 @@ function ordenar(){
                 cont_HostTB[j].name=aux;
             }
         }
-    }
-    for(i=0;i<cont_HostTB.length;i++)
-    {
-        console.log(cont_HostTB[i].cant+'\n');
     }
 }
