@@ -171,7 +171,10 @@ function printSubnetTable(){
 	}$('#tableResoult').removeClass('hidden');
 	var grafica = []; 
 	for (var i = 0; i < contSubRed.length; i++) {
-		grafica.push({'name':contSubRed[i].name,'y':contSubRed[i].encontrados});
+		grafica.push({
+			'name':contSubRed[i].name,
+			'y':(parseInt(contSubRed[i].encontrados) - parseInt(contSubRed[i].host))
+		});
 	}
 	Gpastel('Desperdiciados',grafica,"Desperdicios de hosts por subred.");
 }
