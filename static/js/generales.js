@@ -76,9 +76,8 @@ function cleanBotonesModal(type){
 }
 
 // -------------------------------------------------------------------------------------------------- Graficas (requieren sus respectivos scripts cargados antes que generales.js)
-function Gpastel(type,data,title){
-  $('#graficas').children('#g').remove();
-    $('#graficas').append('<div id="g" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto; margin-top:30px;"></div>');
+function Gpastel(type,dataGraficas,title){
+  $('#graficas').append('<div id="g" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto; margin-top:30px;"></div>');
   Highcharts.chart('g', {
         chart: {
             plotBackgroundColor: null,
