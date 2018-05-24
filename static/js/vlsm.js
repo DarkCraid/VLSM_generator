@@ -169,6 +169,11 @@ function printSubnetTable(){
 			cont 	+=	'<td>'+contSubRed[i].broadcast+'</td></tr>';
 		$('#cont_subnet').append(cont);
 	}$('#tableResoult').removeClass('hidden');
+	var grafica = []; 
+	for (var i = 0; i < contSubRed.length; i++) {
+		grafica.push({'name':contSubRed[i].name,'y':contSubRed[i].encontrados});
+	}
+	Gpastel('Desperdiciados',grafica,"Desperdicios de hosts por subred.");
 }
 
 function countHosts(){
